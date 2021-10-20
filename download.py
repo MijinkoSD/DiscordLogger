@@ -110,6 +110,7 @@ def by_url(urls:list, dir:str="attachments/"):
             except requests.exceptions.Timeout:
                 print( "接続がタイムアウトしました。" )
                 print( "　URL: " + urls[i])
+                continue
 
             if response.status_code != 200:
                 print( "ファイルを正常に取得できませんでした。")
