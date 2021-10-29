@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import json
@@ -49,7 +52,6 @@ $ export DISCORD_TOKEN="<トークン>"
 
 
 '''
-print(args.force_download_image)
 
 USER_TOKEN="Bot "
 if args.use_usertoken:

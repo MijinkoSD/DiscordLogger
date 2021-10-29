@@ -1,11 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+おまけで用意したやつ。
+
+メッセージオブジェクトが保存された.jsonファイルからメッセージの内容だけを取り出して.txtに保存する。
+"""
+
 import json
 
-# おまけで用意したやつ。
-# メッセージオブジェクトが保存された.jsonファイルからメッセージの内容だけを取り出して.txtに保存する。
+file_dir = "messages.json"
 
 messages = []
 
-with open("messages.json", mode='rt', encoding='utf_8') as f:
+with open(file_dir, mode='rt', encoding='utf_8') as f:
     data = json.load(f)
     
     print("メッセージ件数: " + str(len(data)))
