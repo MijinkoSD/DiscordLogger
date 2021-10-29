@@ -10,8 +10,8 @@ interval = 1
 # メッセージデータが入っているjsonファイルのパスを渡せば、
 # 自動でメッセージの添付ファイルをダウンロードしてくれる関数。
 # 要は下に続く関数の全部盛り。
-def image(jsonfile: str, savedir:str="attachments/"):
-    by_url(extract_attach_urls(openjson(jsonfile)),dir=savedir)
+def image(jsonfile: str, savedir:str="attachments/", force_download=False):
+    by_url(extract_attach_urls(openjson(jsonfile)),dir=savedir, force_download=force_download)
 
 
 # jsonで保存されたメッセージデータを読み込んで辞書型が格納されたリストで返す関数。
@@ -79,7 +79,7 @@ def extract_id(url:str="", urls:list=None) -> Union[dict, list]:
 
 # 渡されたURLを元にファイルをダウンロードする。
 # デフォルトでは `attachments/<チャンネルID>/` フォルダにダウンロードする。
-def by_url(urls:list, dir:str="attachments/"):
+def by_url(urls:list, dir:str="attachments/", force_download=False):
     if not urls: return     # urlsの中身が空なら何もしない。
 
     # 保存するファイル名を生成する。
@@ -95,14 +95,19 @@ def by_url(urls:list, dir:str="attachments/"):
 
     # ダウンロードする。
     for i in range(len(urls)):
-        print("ダウンロード中("+str(i+1)+"/"+str(len(urls))+"): " + urls[i])
-
         # フォルダを作成
         try:
             os.mkdir(dir)
         except FileExistsError:
             pass        # 既に作成されていた場合はエラーとなるが無視。
         
+        if os.path.isfile(dir + filenames[i]) and not force_download:
+            # ファイルが既に存在していて、かつforce_downloadがFalseのとき。
+            print("スキップ("+str(i+1)+"/"+str(len(urls))+"): " + urls[i])
+            continue
+        else:
+            print("ダウンロード中("+str(i+1)+"/"+str(len(urls))+"): " + urls[i])
+
         # ファイルをダウンロードして保存。
         with open(dir + filenames[i], "wb") as f:
             try:

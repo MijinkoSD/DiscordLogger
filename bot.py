@@ -22,6 +22,7 @@ Discordのテキストチャンネル内のメッセージ履歴を取得して�
 '''
 parser = argparse.ArgumentParser(description=module_description, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument("-t", "--token", type=str, help="トークンを設定します。")
+parser.add_argument("-f", "--force-download-image", action="store_true", help="画像を上書きしてダウンロードします（このオプションに関わらずメッセージデータは常に上書きします）。")
 parser.add_argument("-u", "--use-usertoken", action="store_true", help="トークンをユーザートークンとして解釈します。")
 parser.add_argument("channel_id", nargs='+', type=int, help="ログを取得するチャンネルIDを設定します（複数指定可）。")
 
@@ -48,6 +49,7 @@ $ export DISCORD_TOKEN="<トークン>"
 
 
 '''
+print(args.force_download_image)
 
 USER_TOKEN="Bot "
 if args.use_usertoken:
@@ -106,7 +108,7 @@ def logging_channel(channel_id:int):
     # 画像を保存する。
     attachments_dir = guild_log_dir + str(channel_id)+"_attachments/"
     makefolder(attachments_dir)
-    download.image(jsonfile=guild_log_dir+message_filename, savedir=attachments_dir)
+    download.image(jsonfile=guild_log_dir+message_filename, savedir=attachments_dir, force_download=args.force_download_image)
 
 
 
