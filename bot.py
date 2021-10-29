@@ -35,7 +35,7 @@ args = parser.parse_args()
 
 
 呼び出し方の例
-$ python bot.py <チャンネルID> <トークン>
+$ python bot.py <チャンネルID> -t <トークン>
 
 
 環境変数にトークンを設定している場合は引数のトークンを省略できる。
