@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+メッセージデータから画像をダウンロードするモジュール。
+
+使い方(例):
+>>> download.image(<path of messages.json)>)
+"""
 
 import os
 import json
@@ -10,22 +16,34 @@ from typing import Union
 interval = 1
 
 
-# メッセージデータが入っているjsonファイルのパスを渡せば、
-# 自動でメッセージの添付ファイルをダウンロードしてくれる関数。
-# 要は下に続く関数の全部盛り。
-def image(jsonfile: str, savedir:str="attachments/", force_download=False):
+def image(jsonfile: str, savedir:str="attachments/", force_download:bool=False):
+    """
+        メッセージデータが入っているjsonファイルのパスを渡せば、
+        自動でメッセージの添付ファイルをダウンロードしてくれる関数。
+        
+        ちなみに、関数名はimageだが別に画像じゃなくてもまとめてダウンロードする。
+
+        Parameters
+        --------
+        jsonfile: str
+            メッセージデータが入ったjsonファイルのパス。
+        savedir: str, default "attachments/"
+            ダウンロードした添付ファイルを保存する場所。
+        force_download: bool, default False
+            Falseの場合、既にダウンロード済みの画像はダウンロードしない。
+    """
     by_url(extract_attach_urls(openjson(jsonfile)),dir=savedir, force_download=force_download)
 
 
-# jsonで保存されたメッセージデータを読み込んで辞書型が格納されたリストで返す関数。
 def openjson(file, encoding='utf_8') -> list:
+    """jsonで保存されたメッセージデータを読み込んで辞書型が格納されたリストで返す関数。"""
     with open(file, mode='rt', encoding=encoding) as f:
         data = json.load(f)
     return data
 
 
-# メッセージデータから添付ファイルのURLだけ抽出する関数。
 def extract_attach_urls(messagedata):
+    """メッセージデータから添付ファイルのURLだけ抽出する関数。"""
     urls = []
     for i in range(len(messagedata)):
         # attachmentsの中身を覗いて、urlが入っていればurlsに入れる。
@@ -39,13 +57,32 @@ def extract_attach_urls(messagedata):
     return list(set(urls))          # 重複要素を削除してreturn。
 
 
-# 添付ファイルのURLからIDやファイル名を抽出する関数。
 def extract_id(url:str="", urls:list=None) -> Union[dict, list]:
-    # https://cdn.discordapp.com/attachments/ から始まるURLにしか対応していない。
+    """
+    添付ファイルのURLからIDやファイル名を抽出する関数。
+    urlを渡した場合はdict、urlsを渡した場合はdictを要素に持つlistが返る。
 
-    # メイン処理関数。
-    # URL文字列からID等を抜き取り辞書型で返す。
+    現状、https://cdn.discordapp.com/attachments/ から始まるURLにしか対応していない。
+    
+    Parameters
+    --------
+    url: str
+        単体のURL。
+        urlsを省略した場合は必須。
+    urls: list
+        複数のURL。
+
+    Returns
+    --------
+    添付ファイル(attachments)のURLの場合:
+        ["type"]: 固定で"attachments"が格納される。
+        ["channel_id"]: URLに含まれているチャンネルID
+        ["attachments_id"]: 添付ファイルのID
+        ["filename"]: ファイル名
+    """
+
     def extracter(url):
+        """URL文字列からID等を抜き取り辞書型で返す。"""
         match = "https://cdn.discordapp.com/attachments/"
         index = url.find(match)
         if index == -1 : return       # attachments/で始まるURLでなければreturn
@@ -80,9 +117,19 @@ def extract_id(url:str="", urls:list=None) -> Union[dict, list]:
     return data
 
 
-# 渡されたURLを元にファイルをダウンロードする。
-# デフォルトでは `attachments/<チャンネルID>/` フォルダにダウンロードする。
-def by_url(urls:list, dir:str="attachments/", force_download=False):
+def by_url(urls:list, dir:str="attachments/", force_download:bool=False):
+    """
+        渡されたURLを元にファイルをダウンロードする。
+
+        Parameters
+        --------
+        urls: str
+            `extract_id`で生成したlistの値。
+        dir: str, default "attachments/"
+            ダウンロードした添付ファイルを保存する場所。
+        force_download: bool, default False
+            Falseの場合、既にダウンロード済みの画像はダウンロードしない。
+    """
     if not urls: return     # urlsの中身が空なら何もしない。
 
     # 保存するファイル名を生成する。

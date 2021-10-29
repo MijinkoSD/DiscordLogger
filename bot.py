@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+（このモジュールは外部から呼び出されることを想定していません）
+
+シェルから起動する時の例
+$ python bot.py <チャンネルID> -t <トークン>
+
+
+環境変数にトークンを設定している場合は引数のトークンを省略できる。
+
+環境変数の設定例
+Windows PowerShell:
+> $env:DISCORD_TOKEN="<トークン>"
+Linux:
+$ export DISCORD_TOKEN="<トークン>"
+"""
 
 import os
 import sys
@@ -35,24 +50,6 @@ if len(sys.argv) <= 1:
 args = parser.parse_args()
 
 
-'''
-
-
-呼び出し方の例
-$ python bot.py <チャンネルID> -t <トークン>
-
-
-環境変数にトークンを設定している場合は引数のトークンを省略できる。
-
-環境変数の設定例
-Windows PowerShell:
-> $env:DISCORD_TOKEN="<トークン>"
-Linux:
-$ export DISCORD_TOKEN="<トークン>"
-
-
-'''
-
 USER_TOKEN="Bot "
 if args.use_usertoken:
     USER_TOKEN=""
@@ -65,8 +62,8 @@ else:
 CHANNEL_ID = args.channel_id
 
 
-# フォルダを作成する関数
 def makefolder(dir):
+    """フォルダを作成する。"""
     try:
         os.mkdir(dir)
     except FileExistsError:
@@ -74,6 +71,8 @@ def makefolder(dir):
 
 
 def logging_channel(channel_id:int):
+    """チャンネルに関連するデータをすべて取得し、保存する。"""
+
     # logフォルダの作成。
     log_dir = "log/"
     makefolder(log_dir)

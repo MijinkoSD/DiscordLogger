@@ -9,11 +9,20 @@ interval = 1
 apiurl = "https://discord.com/api/v9"
 
 
-# メッセージのログを全件取得してくれる。
-#   token:      "Bot <BOT Token>"
-#   channelID:  チャンネルのID。
-#   beforeID:   メッセージIDを渡すと、そのメッセージよりも前のメッセージを取得する（省略可）。
 def message_all(token: str, channelID:int, beforeID:int=0) -> list:
+    """
+    メッセージのログを全件取得する。
+
+    Parameters
+    --------
+    token: str
+        （Botトークンの場合は）"Bot <BOT Token>"の形式で渡すべき。
+    channelID: str
+        チャンネルのID。
+    beforeID: int, default 0
+        メッセージIDを渡すと、そのメッセージよりも前のメッセージを取得する（省略可）。
+
+    """
     message_count = 0
     messages = []
     while True:
@@ -52,6 +61,16 @@ def message_all(token: str, channelID:int, beforeID:int=0) -> list:
 #   token:      "Bot <BOT Token>"
 #   channelID:  取得するチャンネルのID。
 def channel(token: str, channel_id: int) -> dict:
+    """
+    チャンネルの情報を取得して返す。
+
+    Parameters
+    ---------
+    token: str
+        （Botトークンの場合は）"Bot <BOT Token>"の形式で渡すべき。
+    channelID: int
+        取得するチャンネルのID。
+    """
     print("チャンネル情報を取得中。")
     url = apiurl + "/channels/" + str(channel_id)
     header = {"authorization":token}
@@ -63,6 +82,7 @@ def channel(token: str, channel_id: int) -> dict:
 
 
 def guild(token: str, guild_id: int) -> dict:
+    """ギルドの情報を取得して返す。"""
     print("ギルド情報を取得中。")
     url = apiurl + "/guilds/" + str(guild_id)
     header = {"authorization":token}
