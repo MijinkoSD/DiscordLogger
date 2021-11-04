@@ -80,6 +80,9 @@ def logging_channel(channel_id:int):
 
     # チャンネル情報を保存する。
     channel = logger.channel(token=USER_TOKEN, channel_id=channel_id)
+    if not channel:
+        print("チャンネル(%d)情報の取得に失敗したため、このチャンネルのログの保存を中断します。" % channel_id)
+        return
     guild_id = channel["guild_id"]      # ついでにギルドIDも取得
     guild_log_dir = log_dir+str(guild_id)+"/"
     makefolder(guild_log_dir)
@@ -93,9 +96,11 @@ def logging_channel(channel_id:int):
     # ギルド情報を取得する。
     guild = logger.guild(token=USER_TOKEN, guild_id=guild_id)
     guild_filename = "guild_"+str(guild_id)+"_guild.json"
-
-    with open(guild_log_dir+guild_filename, mode='wt', encoding='utf_8') as f:
-        json.dump(guild, f, ensure_ascii=False, indent=2)
+    if not channel:
+        print("ギルド(%d)情報の取得に失敗しました。")
+    else:
+        with open(guild_log_dir+guild_filename, mode='wt', encoding='utf_8') as f:
+            json.dump(guild, f, ensure_ascii=False, indent=2)
     
     
     # メッセージ履歴を保存する。

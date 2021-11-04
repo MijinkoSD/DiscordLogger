@@ -75,8 +75,12 @@ def channel(token: str, channel_id: int) -> dict:
     url = apiurl + "/channels/" + str(channel_id)
     header = {"authorization":token}
     response = requests.get(url, headers=header)
-    if response.status_code / 100 != 2:
+    try:
+        response.raise_for_status()
+    except requests.RequestException as e:
         print("Error: HTTP Status Code: " + str(response.status_code))
+        return {}
+        
     print("チャンネル情報を取得しました。")
     return response.json()
 
@@ -87,7 +91,10 @@ def guild(token: str, guild_id: int) -> dict:
     url = apiurl + "/guilds/" + str(guild_id)
     header = {"authorization":token}
     response = requests.get(url, headers=header)
-    if response.status_code / 100 != 2:
+    try:
+        response.raise_for_status()
+    except requests.RequestException as e:
         print("Error: HTTP Status Code: " + str(response.status_code))
+        return {}
     print("ギルド情報を取得しました。")
     return response.json()
