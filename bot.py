@@ -95,7 +95,7 @@ def logging_channel(channel_id:int):
     guild_filename = "guild_"+str(guild_id)+"_guild.json"
 
     with open(guild_log_dir+guild_filename, mode='wt', encoding='utf_8') as f:
-        json.dump(channel, f, ensure_ascii=False, indent=2)
+        json.dump(guild, f, ensure_ascii=False, indent=2)
     
     
     # メッセージ履歴を保存する。
