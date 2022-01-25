@@ -166,6 +166,8 @@ def by_url(urls:list, dir:str="attachments/", force_download:bool=False):
                 print( "接続がタイムアウトしました。" )
                 print( "　URL: " + urls[i])
                 continue
+            except Exception as e:
+                print(e)
 
             if response.status_code != 200:
                 print( "ファイルを正常に取得できませんでした。")
