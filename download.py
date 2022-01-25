@@ -159,22 +159,23 @@ def by_url(urls:list, dir:str="attachments/", force_download:bool=False):
             print("ダウンロード中("+str(i+1)+"/"+str(len(urls))+"): " + urls[i])
 
         # ファイルをダウンロードして保存。
-        with open(dir + filenames[i], "wb") as f:
-            try:
-                response = requests.get(urls[i], timeout=(6.0, 12.0))
-            except requests.exceptions.Timeout:
-                print( "接続がタイムアウトしました。" )
-                print( "　URL: " + urls[i])
-                continue
-            except Exception as e:
-                print(e)
+        try:
+            with open(dir + filenames[i], "wb") as f:
+                try:
+                    response = requests.get(urls[i], timeout=(6.0, 12.0))
+                except requests.exceptions.Timeout:
+                    print( "接続がタイムアウトしました。" )
+                    print( "　URL: " + urls[i])
+                    continue
 
-            if response.status_code != 200:
-                print( "ファイルを正常に取得できませんでした。")
-                print( "　HTTP Status: " + str(response.status_code))
-                continue
+                if response.status_code != 200:
+                    print( "ファイルを正常に取得できませんでした。")
+                    print( "　HTTP Status: " + str(response.status_code))
+                    continue
 
-            f.write(response.content)
+                f.write(response.content)
+        except Exception as e:
+            print(e)
 
         time.sleep(interval)    # 連続で通信しないように間隔を置く。
 
